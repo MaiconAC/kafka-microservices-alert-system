@@ -1,0 +1,45 @@
+version: "3.8"
+
+volumes:
+  kafka-data:
+
+services:
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    ports:
+      - 9092:9092 # broker
+      - 9093:9093 # controller
+    environment:
+      # Variaveis de identificacao
+      CLUSTER_ID: "ClusterAlertas"
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_KRAFT_MODE: "true"
+
+      # Quorum do controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+
+      # Tipos de protocolos que cada entrada vai ouvir (Plaintext = sem criptografia e auth)
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: BROKER_LOCAL:PLAINTEXT,BROKER_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
+
+      # Listener internos e externos
+      KAFKA_LISTENERS: BROKER_HOST://0.0.0.0:9092,BROKER_LOCAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093 # usa 29092 para nao dar conflito com 9092 do host
+      KAFKA_ADVERTISED_LISTENERS: BROKER_HOST://localhost:9092,BROKER_LOCAL://kafka:29092
+
+      # Listener padrao para comunicacao entre brokers
+      KAFKA_INTER_BROKER_LISTENER_NAME: BROKER_LOCAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+
+      # Criação automática de tópicos (para desenvolvimento)
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+      # Fator de replicação para tópicos de controle (pode ser 1 para um broker so)
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+      # Onde o Kafka guarda os logs
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_LOG_RETENTION_HOURS: 168 # uma semana
+
+    volumes:
+      - kafka-data:/var/lib/kafka/data
