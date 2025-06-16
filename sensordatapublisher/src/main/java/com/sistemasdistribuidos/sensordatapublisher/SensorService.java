@@ -1,6 +1,7 @@
 package com.sistemasdistribuidos.sensordatapublisher;
 
 import java.time.Duration;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,31 +14,59 @@ public class SensorService {
     @Value("${sensor.idSensor}")
     private int idSensor;
 
+    @Value("${sensor.tipo}")
+    private String sensorType;
+
     @Autowired
     private SensorRequestPublisher sensorRequestPublisher;
 
+    private final Random randGenerator = new Random();
+
+    // Funcao que vai entrar em loop e enviar dados de sensores para o kafka
     public void collectData() {
         try {
             while (true) {
-                String message = "Mensagem de teste kafka";
-                sensorRequestPublisher.sendMessage(
-                    new SensorMessageDTO(idSensor, message)
-                );
-
-                Thread.sleep(5 * 1000);
+                sensorRequestPublisher.sendMessage(simulateSensorData());
+                Thread.sleep(10 * 1000);
             }
+
         } catch (JsonProcessingException e) {
             String errorMessage = "Ocorreu um erro na request: " + e.getMessage();
             System.out.println(errorMessage);
             return;
+
         } catch (InterruptedException e) {
             String errorMessage = "Ocorreu um erro na espera do sensor: " + e.getMessage();
             System.out.println(errorMessage);
             return;
+
         } catch (Exception e) {
             String errorMessage = "Ocorreu um erro ao coletar os dados do sensor: " + e.getMessage();
             System.out.println(errorMessage);
             return;
         }
+    }
+
+    // Gera o dado de sensor de acordo com o tipo escolhido
+    private SensorMessageDTO simulateSensorData() {
+        switch(sensorType) {
+            case "CHUVA":
+                return generateRainData();
+            // case "NIVEL_RIO":
+                // return generateRiverData();
+                //  break;
+            default:
+                return new SensorMessageDTO(idSensor, 0, "CHUVA");
+        }
+    }
+
+    // Dados de chuva forte ~ muito forte, retirados do site AlertaBlu
+    private SensorMessageDTO generateRainData() {
+        float minValue = 35f;
+        float maxValue = 55f;
+
+        float value = randGenerator.nextFloat(maxValue - minValue) + minValue;
+
+        return new SensorMessageDTO(idSensor, value, sensorType);
     }
 }

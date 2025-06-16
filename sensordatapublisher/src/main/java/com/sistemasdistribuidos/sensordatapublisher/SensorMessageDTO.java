@@ -7,13 +7,15 @@ import java.util.UUID;
 public class SensorMessageDTO implements Serializable {
     private String sensorMessageCode;
     private int idSensor;
-    private String message;
+    private float value;
+    private String sensorType;
     private String dtCreation;
 
-    public SensorMessageDTO(int idSensor, String message) {
+    public SensorMessageDTO(int idSensor, float value, String sensorType) {
         this.sensorMessageCode = UUID.randomUUID().toString();
         this.idSensor = idSensor;
-        this.message = message;
+        this.value = value;
+        this.sensorType = sensorType;
         this.dtCreation = LocalDateTime.now().toString();
     }
 
@@ -27,10 +29,14 @@ public class SensorMessageDTO implements Serializable {
     }
 
 
-    public String getMessage() {
-        return this.message;
+    public float getValue() {
+        return this.value;
     }
 
+
+    public String getSensorType() {
+        return this.sensorType;
+    }
 
     public String getDtCreation() {
         return this.dtCreation;
