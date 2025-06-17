@@ -15,4 +15,4 @@ Numa IDE, inicializar o projeto SensorDataPublisher para começar a enviar mensa
 
 Para configurar o Kafka, apenas é necessário criar o tópico, rodando esse comando dentro do bash do container do Kafka, no Docker
 
-/usr/bin/kafka-topics --create --topic sensores --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+`/usr/bin/kafka-topics --create --topic sensores --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1`
