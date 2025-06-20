@@ -17,6 +17,9 @@ public class SensorService {
     @Value("${sensor.tipo}")
     private String sensorType;
 
+    @Value("${sensor.regioes}")
+    private String[] sensorRegions;
+
     @Autowired
     private SensorRequestPublisher sensorRequestPublisher;
 
@@ -52,21 +55,31 @@ public class SensorService {
         switch(sensorType) {
             case "CHUVA":
                 return generateRainData();
-            // case "NIVEL_RIO":
-                // return generateRiverData();
-                //  break;
+            case "NIVEL_RIO":
+                return generateRiverData();
             default:
-                return new SensorMessageDTO(idSensor, 0, "CHUVA");
+                return new SensorMessageDTO(idSensor, 0, "CHUVA", new String[]{"CENTRO"});
         }
     }
 
     // Dados de chuva forte ~ muito forte, retirados do site AlertaBlu
     private SensorMessageDTO generateRainData() {
-        float minValue = 35f;
-        float maxValue = 55f;
+        float minValue = 10f;
+        float maxValue = 60f;
 
         float value = randGenerator.nextFloat(maxValue - minValue) + minValue;
 
-        return new SensorMessageDTO(idSensor, value, sensorType);
+        return new SensorMessageDTO(idSensor, value, sensorType, sensorRegions);
+    }
+
+
+    // Dados de chuva forte ~ muito forte, retirados do site AlertaBlu
+    private SensorMessageDTO generateRiverData() {
+        float minValue = 0.5f;
+        float maxValue = 15f;
+
+        float value = randGenerator.nextFloat(maxValue - minValue) + minValue;
+
+        return new SensorMessageDTO(idSensor, value, sensorType, sensorRegions);
     }
 }

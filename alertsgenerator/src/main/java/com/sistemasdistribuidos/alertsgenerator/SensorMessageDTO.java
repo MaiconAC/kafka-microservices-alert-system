@@ -1,4 +1,4 @@
-package com.sistemasdistribuidos.sensordatapublisher;
+package com.sistemasdistribuidos.alertsgenerator;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -11,6 +11,8 @@ public class SensorMessageDTO implements Serializable {
     private String sensorType;
     private String[] regions;
     private String dtCreation;
+
+    public SensorMessageDTO() {}
 
     public SensorMessageDTO(int idSensor, float value, String sensorType, String[] regions) {
         this.sensorMessageCode = UUID.randomUUID().toString();
@@ -48,4 +50,3 @@ public class SensorMessageDTO implements Serializable {
         return this.dtCreation;
     }
 }
-
