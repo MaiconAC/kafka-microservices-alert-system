@@ -23,6 +23,8 @@ public class AlertsGeneratorService {
             case "NIVEL_RIO":
                 validateRiverData(sensorMessage);
                 break;
+            case "TEMPERATURA":
+                validateTemperatureData(sensorMessage);
             default:
                 System.out.println("Tipo de aviso não identificado");
 
@@ -55,6 +57,19 @@ public class AlertsGeneratorService {
 
         } else if (sensorMessage.getValue() >= 8f) {
             String alert = "ALERTA MÁXIMO: Nível do rio em " + sensorMessage.getValue();
+            sendAlert(alert, sensorMessage);
+        }
+    }
+
+    private void validateTemperatureData(SensorMessageDTO sensorMessage) {
+        recentRainMessages.add(sensorMessage);
+
+        if (sensorMessage.getValue() > 38f) {
+            String alert = "Alerta de onda de calor!";
+            sendAlert(alert, sensorMessage);
+
+        } else if (sensorMessage.getValue() < 5f) {
+            String alert = "Alerta de frente fria!";
             sendAlert(alert, sensorMessage);
         }
     }

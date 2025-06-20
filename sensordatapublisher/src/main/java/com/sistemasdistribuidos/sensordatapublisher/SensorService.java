@@ -57,6 +57,8 @@ public class SensorService {
                 return generateRainData();
             case "NIVEL_RIO":
                 return generateRiverData();
+            case "TEMPERATURA":
+                return generateTemperatureData();
             default:
                 return new SensorMessageDTO(idSensor, 0, "CHUVA", new String[]{"CENTRO"});
         }
@@ -79,6 +81,16 @@ public class SensorService {
         float maxValue = 15f;
 
         float value = randGenerator.nextFloat(maxValue - minValue) + minValue;
+
+        return new SensorMessageDTO(idSensor, value, sensorType, sensorRegions);
+    }
+
+
+    private SensorMessageDTO generateTemperatureData() {
+        int minValue = 2;
+        int maxValue = 45;
+
+        float value = (float) randGenerator.nextInt(maxValue - minValue) + minValue;
 
         return new SensorMessageDTO(idSensor, value, sensorType, sensorRegions);
     }
