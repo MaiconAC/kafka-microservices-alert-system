@@ -43,3 +43,8 @@ services:
 
     volumes:
       - kafka-data:/var/lib/kafka/data
+
+  #sensordatapublisher:
+    #image: sistemasdistribuidos/sensordatapublisher
+    #container_name: sensordatapublisher
+
