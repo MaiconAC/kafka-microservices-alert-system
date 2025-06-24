@@ -16,10 +16,10 @@ public class KafkaMessageProducer {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public String sendMessage(AlertMessageDTO alertMessage) throws JsonProcessingException {
+    public void sendMessage(AlertMessageDTO alertMessage) throws JsonProcessingException {
         String orderAsMessage = objectMapper.writeValueAsString(alertMessage);
         kafkaTemplate.send(TOPIC, orderAsMessage);
-        return "Alerta enviado";
+        System.out.println("Alerta enviado: " + alertMessage.getMessageAlert() + "\n\n");
     }
 }
 

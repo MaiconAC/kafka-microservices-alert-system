@@ -46,6 +46,10 @@ public class SensorMessageDTO implements Serializable {
         return this.regions;
     }
 
+    public void setRegions(String[] regions) {
+        this.regions = regions;
+    }
+
     public String getDtCreation() {
         return this.dtCreation;
     }

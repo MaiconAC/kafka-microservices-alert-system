@@ -19,9 +19,9 @@ public class KafkaMessageConsumer {
     @KafkaListener(topics = TOPIC)
     public void listen(String message) {
         try {
-            System.out.println("Mensagem recebida: " + message);
+            System.out.println("Mensagem recebida: " + message + "\n\n");
             SensorMessageDTO sensorMessage = objectMapper.readValue(message, SensorMessageDTO.class);
-            alertsGeneratorService.storeSensorDataByType(sensorMessage);
+            alertsGeneratorService.generateWeatherAlertByType(sensorMessage);
         } catch (Exception e) {
             System.out.println("Erro escutando as mensagens: " + e.getMessage());
         }
