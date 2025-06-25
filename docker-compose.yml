@@ -10,6 +10,11 @@ services:
     ports:
       - 9092:9092 # broker
       - 9093:9093 # controller
+    healthcheck:
+      test: ["CMD", "bash", "-c", "kafka-topics --bootstrap-server localhost:9092 --list"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     environment:
       # Variaveis de identificacao
       CLUSTER_ID: "ClusterAlertas"
@@ -50,7 +55,9 @@ services:
     build:
       context: ./sensordatapublisher
       dockerfile: Dockerfile
-
+    depends_on:
+      kafka:
+        condition: service_healthy
     environment:
       SENSOR_ID: 1
       NOME_SENSOR: sensor1
@@ -65,7 +72,20 @@ services:
     build:
       context: ./alertsgenerator
       dockerfile: Dockerfile
-
+    depends_on:
+      kafka:
+        condition: service_healthy
     environment:
       KAFKA_SERVER: kafka:29092
+
+  sms-alert-sender:
+    image: sistemasdistribuidos/sms-alert-sender
+    container_name: sms-alert-sender
+    build:
+      context: ./smsalertsender
+      dockerfile: Dockerfile
+    depends_on:
+      kafka:
+        condition: service_healthy
+    working_dir: /app
 
