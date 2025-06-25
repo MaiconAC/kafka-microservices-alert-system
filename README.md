@@ -8,11 +8,22 @@ Requisitos:
 - JDK 24
 - Projeto clonado/instalado
 
+### Gerando as imagens
+Para conseguir rodar todos os serviços dentro do docker-compose, é preciso gerar uma imagem para cada serviço.
+
+Esse exemplo vai ser feito pro serviço `sensordatapublisher`, mas deve ser repetido com os outros também.
+
+Primeiro, devemos verificar se foi criado um executável do serviço na pasta target, ele deve se parecer com `sensordatapublisher-0.0.1-SNAPSHOT.jar`. O executável normalmente é criado ao executar o programa, mas atmbém pode ser criado pelo Maven com `mvn clean packages`. O executável é necessário pois o Dockerfile cria a imagem em cima dele.
+
+Tendo o executável, ainda dentro da pasta do serviço podemos criar a imagem do docker com o comando `docker build -t sistemasdistribuidos/sensor-data-publisher:latest .`.
+
+Após criar as imagens de todos os serviços, confirme que o docker-compose não está executando e rode `docker-compose build --no-cache` para atualizar com as novas imagens.
+
 No diretório do projeto, rodar o comando `docker-compose up -d` para subir o container do Kafka.
-OBS: ter certeza que a porta 9092 não esteja sendo utilizada
 
-Numa IDE, inicializar o projeto SensorDataPublisher para começar a enviar mensagens para o Kafka. Para utilizar mais de um sensor, atualizar o **idSensor** no arquivo **application.properties**
+Para acompanhar os logs de um programa, `docker logs alerts-generator`.
 
-Para configurar o Kafka, apenas é necessário criar o tópico, rodando esse comando dentro do bash do container do Kafka, no Docker
+## Opcional
+O Kafka deverá criar o tópico automaticamente, mas caso precisar configurar manualmente, rodando esse comando dentro do bash do container do Kafka, no Docker
 
 `/usr/bin/kafka-topics --create --topic sensores --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1`

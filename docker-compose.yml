@@ -44,7 +44,28 @@ services:
     volumes:
       - kafka-data:/var/lib/kafka/data
 
-  #sensordatapublisher:
-    #image: sistemasdistribuidos/sensordatapublisher
-    #container_name: sensordatapublisher
+  sensor-chuva-1:
+    image: sistemasdistribuidos/sensor-data-publisher
+    container_name: sensor-chuva-1
+    build:
+      context: ./sensordatapublisher
+      dockerfile: Dockerfile
+
+    environment:
+      SENSOR_ID: 1
+      NOME_SENSOR: sensor1
+      TIPO_SENSOR: CHUVA
+      REGIOES_SENSOR: VELHA,CENTRO,FORTALEZA
+      KAFKA_SERVER: kafka:29092
+
+
+  alerts-generator:
+    image: sistemasdistribuidos/alerts-generator
+    container_name: alerts-generator
+    build:
+      context: ./alertsgenerator
+      dockerfile: Dockerfile
+
+    environment:
+      KAFKA_SERVER: kafka:29092
 
